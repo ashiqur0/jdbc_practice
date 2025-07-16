@@ -50,7 +50,7 @@ public class a {
     public static void create(Connection con, Scanner sc) throws SQLException {
         System.out.print("Enter roll: ");
         int roll = sc.nextInt();
-        sc.nextLine(); // Consume newline
+        sc.nextLine();                      // Consume newline
         System.out.print("Enter name: ");
         String name = sc.nextLine();
 
