@@ -1,3 +1,17 @@
+/*
+JDBC: with MySQL Database
+
+There are 7 steps to connect Java program to MySQL Databse,
+1. Import the packages,
+2. Load and Register JDBC Driver
+3. Establish the Connection
+4. Create a Statement
+5. Execute a SQL Query
+6. Extract Data from ResultSet
+7. Cleanup the Environment
+*/
+
+
 import java.sql.*;
 
 class Student {
@@ -8,7 +22,8 @@ class Student {
 class Student_DAO {
 
     Connection con = null;
-    public void connect() {
+
+    public Student_DAO() {        
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://127.0.0.1/university", "root", "root");
@@ -16,9 +31,17 @@ class Student_DAO {
             System.out.println(e);
         }
     }
+
+    // public void connect() {
+    //     try {
+    //         Class.forName("com.mysql.cj.jdbc.Driver");
+    //         con = DriverManager.getConnection("jdbc:mysql://127.0.0.1/university", "root", "root");
+    //     } catch (Exception e) {
+    //         System.out.println(e);
+    //     }
+    // }
     
-    public Student getStudent(int roll) {
-        
+    public Student getStudent(int roll) {        
         try {
             Student s = new Student();
             s.roll = roll;
@@ -48,6 +71,9 @@ class Student_DAO {
             ps.setInt(1, s.roll);
             ps.setString(2, s.name);
             ps.executeUpdate();
+
+            ps.close();
+            con.close();
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -59,6 +85,9 @@ class Student_DAO {
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, roll);
             ps.executeUpdate();
+
+            ps.close();
+            con.close();
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -71,12 +100,15 @@ class Student_DAO {
             ps.setInt(2, s.roll);
             ps.setString(1, s.name);
             ps.executeUpdate();
+
+            ps.close();
+            con.close();
         } catch (Exception e) {
             System.out.println(e);
         }
     }
 
-    public void showStudent() {
+    public void showStudents() {
         try {
             Statement st = con.createStatement();
             String query = "SELECT * FROM UNIVERSITY.STUDENTS";
@@ -88,6 +120,9 @@ class Student_DAO {
                 String name = rs.getString(2);
                 System.out.println(roll + "\t" + name);
             }
+
+            st.close();
+            con.close();
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -98,19 +133,15 @@ public class JDBC {
 
     public static void main(String[] args) throws Exception {
         Student_DAO dao = new Student_DAO();
+        // dao.connect();// connect() method code I place in Student_DAO() constructor
         
-        // Put Data
-        dao.connect();
-        Student s = new Student();
-        s.roll = 65;
-        s.name = "Dipto";
-        dao.addStudent(s);
+        // // Put Data
+        // Student s = new Student();
+        // s.roll = 65;
+        // s.name = "Dipto";
+        // dao.addStudent(s);
         
-        // Fetch Data
-        dao.connect();
-        dao.showStudent();
-        
-        // Get Data
+        // // Get Data
         // Student s = dao.getStudent(16);
         // System.out.println(s.roll + " " + s.name);
 
@@ -118,11 +149,12 @@ public class JDBC {
         // Student s = new Student();
         // s.roll = 48;
         // s.name = "Tanzid";
-        // dao.connect();
         // dao.updateStudent(s);
 
         // // Remove Data
-        // dao.connect();
         // dao.removeStudent(57);
+                
+        // Fetch Data
+        dao.showStudents();
     }
 }
